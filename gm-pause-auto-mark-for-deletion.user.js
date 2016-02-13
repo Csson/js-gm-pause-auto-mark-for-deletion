@@ -50,7 +50,8 @@ tags.each(function(i) {
     }
 
     // _ in version -> check but don't count towards releases for the distribution
-    if(version.match(/_/)) {
+    // but only if we already have seen a newer release
+    if(distVersions.length && version.match(/_/)) {
         $checkbox.prop('checked', true);
         $span.css(styles[$span.attr('class')]);
     }
