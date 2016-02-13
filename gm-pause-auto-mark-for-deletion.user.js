@@ -40,8 +40,7 @@ tags.each(function(i) {
     }
 
     var distribution = distMatch[1];
-    var version = distMatch[2];
-    version = version.replace(/\.(meta|readme|tar\.gz)$/, '');
+    var version = distMatch[2].replace(/\.(meta|readme|tar\.gz)$/, '');
 
     // new dist - reset
     if(distribution !== currentDist) {
@@ -55,14 +54,12 @@ tags.each(function(i) {
     if(version.match(/_/)) {
         $checkbox.prop('checked', true);
         $span.css(styles[$span.attr('class')]);
-        return;
     }
-
     // we haven't seen the version yet...
-    if($.inArray(version, distVersions) == -1) {
+    else if($.inArray(version, distVersions) == -1) {
         distVersions.push(version);
 
-        // ...and we just breached the limit, check this and all earlier versions
+        // ...and we just reached the limit, check this and all earlier versions
         if(distVersions.length > limit) {
             doCheck = 1;
         }
@@ -70,7 +67,6 @@ tags.each(function(i) {
 
     if(doCheck) {
         // already scheduled - make it stand out
-        console.log($span.text());
         if($span.text().match(/Scheduled for deletion/)) {
             $span.css(styles['black']);
         }
