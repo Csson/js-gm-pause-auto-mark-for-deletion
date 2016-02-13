@@ -12,10 +12,9 @@ const limit = 2;
 this.$ = this.jQuery = jQuery.noConflict(true);
 
 let styles = {
-    line1: { backgroundColor: '#bb4444', color: '#eeeeee'},
-    line2: { backgroundColor: '#44bb44', color: '#eeeeee'},
-    line3: { backgroundColor: '#4444bb', color: '#eeeeee'},
-    black: { backgroundColor: '#222222', color: '#eeeeee'},
+    normal:    { display: 'inline-block', backgroundColor: '#ffffff' },
+    marked:    { display: 'inline-block', backgroundColor: '#bb4444', color: '#eeeeee'},
+    scheduled: { display: 'inline-block', backgroundColor: '#555555', color: '#eeeeee'},
 };
 
 // look at releases in decending time
@@ -49,15 +48,27 @@ tags.each(function(i) {
         doCheck = 0;
     }
 
+    // already scheduled - make it stand out
+    if($span.text().match(/Scheduled for deletion/)) {
+        $span.css(styles['scheduled']);
+        return;
+    }
+
+    // new version - add some padding
+    if(distVersions.length && distVersions[0] !== version) {
+        $span.css({ marginBottom: '10px' });
+    }
+    $span.css(styles['normal']);
+
     // _ in version -> check but don't count towards releases for the distribution
     // but only if we already have seen a newer release
     if(distVersions.length && version.match(/_/)) {
         $checkbox.prop('checked', true);
-        $span.css(styles[$span.attr('class')]);
+        $span.css(styles['marked']);
     }
     // we haven't seen the version yet...
     else if($.inArray(version, distVersions) == -1) {
-        distVersions.push(version);
+        distVersions.unshift(version);
 
         // ...and we just reached the limit, check this and all earlier versions
         if(distVersions.length > limit) {
@@ -66,14 +77,8 @@ tags.each(function(i) {
     }
 
     if(doCheck) {
-        // already scheduled - make it stand out
-        if($span.text().match(/Scheduled for deletion/)) {
-            $span.css(styles['black']);
-        }
-        else {
-            $checkbox.prop('checked', true);
-            $span.css(styles[$span.attr('class')]);
-        }
+        $checkbox.prop('checked', true);
+        $span.css(styles['marked']);
     }
 });
 
