@@ -5,7 +5,6 @@
 // @require     https://code.jquery.com/jquery-2.2.0.min.js
 // @include     https://pause.perl.org/pause/authenquery?ACTION=delete_files
 // @version     1
-// @grant       GM_abbStyle
 // ==/UserScript==
 
 const limit = 2;
