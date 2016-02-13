@@ -16,6 +16,7 @@ let styles = {
     line1: { backgroundColor: '#bb4444', color: '#eeeeee'},
     line2: { backgroundColor: '#44bb44', color: '#eeeeee'},
     line3: { backgroundColor: '#4444bb', color: '#eeeeee'},
+    black: { backgroundColor: '#222222', color: '#eeeeee'},
 };
 
 // look at releases in decending time
@@ -42,19 +43,19 @@ tags.each(function(i) {
     var version = distMatch[2];
     version = version.replace(/\.(meta|readme|tar\.gz)$/, '');
 
-    // _ in version -> check but don't count towards releases for the distribution
-    if(version.match(/_/)) {
-        $checkbox.prop('checked', true);
-        $span.css(styles[$span.attr('class')]);
-        return;
-    }
-
     // new dist - reset
     if(distribution !== currentDist) {
         $span.append('<h4 style="margin: 15px 0px -10px 0px;">' + currentDist + '</h4>');
         currentDist = distribution;
         distVersions = [];
         doCheck = 0;
+    }
+
+    // _ in version -> check but don't count towards releases for the distribution
+    if(version.match(/_/)) {
+        $checkbox.prop('checked', true);
+        $span.css(styles[$span.attr('class')]);
+        return;
     }
 
     // we haven't seen the version yet...
@@ -68,8 +69,15 @@ tags.each(function(i) {
     }
 
     if(doCheck) {
-        $checkbox.prop('checked', true);
-        $span.css(styles[$span.attr('class')]);
+        // already scheduled - make it stand out
+        console.log($span.text());
+        if($span.text().match(/Scheduled for deletion/)) {
+            $span.css(styles['black']);
+        }
+        else {
+            $checkbox.prop('checked', true);
+            $span.css(styles[$span.attr('class')]);
+        }
     }
 });
 
